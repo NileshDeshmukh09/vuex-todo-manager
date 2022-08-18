@@ -1,35 +1,38 @@
 import axios from 'axios';
 
 const state = {
-    TodosList : []
+    TodosList: []
 };
 
 const getters = {
-    allTodos : state => state.TodosList,
-    
+    allTodos: state => state.TodosList,
+
 };
 
 const actions = {
-    async fetchTodos({ commit }){
+    async fetchTodos({ commit }) {
         const response = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
 
         commit('setTodos', response.data);
     },
-     
-    async addTodo({ commit }, title ) {
-        const response  = await axios.post(`https://jsonplaceholder.typicode.com/todos` , { title , completed : false });
+
+    async addTodo({ commit }, title) {
+        const response = await axios.post(`https://jsonplaceholder.typicode.com/todos`, { title, completed: false });
         commit('newTodo', response.data);
     },
 
-    async deleteTodo({ commit }, id){
+    async deleteTodo({ commit }, id) {
         await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`),
-        commit('removeTodo' , id);
+            commit('removeTodo', id);
     },
 
-    async filterTodos({ commit } , e){
-        console.log(e);
-        const response  = await axios.get(`https://jsonplaceholder.typicode.com/todos?_limit=${limit}`);
+    async filterTodos({ commit }, e) {
+        /* Get Selected NUmber */
+        const limit = parseInt(e.target.options[e.target.options.selectedIndex].innerText);
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/todos?_limit=${limit}`);
+        console.log(limit);
         commit('setTodos', response.data);
+
 
     }
 
@@ -37,9 +40,9 @@ const actions = {
 };
 
 const mutations = {
-    setTodos : ( state , TodosList ) => ( state.TodosList = TodosList ),
-    newTodo : ( state , todo ) => state.TodosList.unshift(todo),
-    removeTodo : (state, id) =>state.TodosList = state.TodosList.filter(todo => todo.id !== id)
+    setTodos: (state, TodosList) => (state.TodosList = TodosList),
+    newTodo: (state, todo) => state.TodosList.unshift(todo),
+    removeTodo: (state, id) => state.TodosList = state.TodosList.filter(todo => todo.id !== id)
 };
 
 export default {
